@@ -30,6 +30,11 @@
     ]
   },
   "icon": "icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rb905/vscode-aws-vault.git"
+  },
+  "publisher": "rb905",
   "scripts": {
     "vscode:prepublish": "npm run package",
     "compile": "webpack",
