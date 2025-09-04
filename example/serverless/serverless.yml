@@ -1,0 +1,14 @@
+service: string-concat-service
+provider:
+  name: aws
+  runtime: nodejs18.x
+plugins:
+  - serverless-offline
+functions:
+  foo:
+    handler: handler.foo
+    events:
+      - http:
+          path: foo
+          method: post
+          cors: true
