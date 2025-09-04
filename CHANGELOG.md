@@ -4,7 +4,7 @@ All notable changes to the "vscode-aws-vault" extension will be documented in th
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [0.0.2] - 2024-12-19
+## [0.0.2] - 2025-04-09
 
 ### Added
 - Added serverless example project to test the extension
