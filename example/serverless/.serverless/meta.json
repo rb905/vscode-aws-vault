@@ -1,0 +1,77 @@
+{
+  "/home/bairathirahul/Workspace/vscode-aws-vault/example/serverless/serverless.yml": {
+    "versionFramework": "4.18.2",
+    "servicePath": "/home/bairathirahul/Workspace/vscode-aws-vault/example/serverless/serverless.yml",
+    "serviceConfigFileName": "serverless.yml",
+    "service": {
+      "service": "string-concat-service",
+      "provider": {
+        "name": "aws",
+        "runtime": "nodejs18.x",
+        "stage": "dev",
+        "region": "us-east-1",
+        "versionFunctions": true,
+        "environment": {
+          "IS_LOCAL": "true"
+        }
+      },
+      "plugins": [
+        "serverless-offline"
+      ],
+      "functions": {
+        "foo": {
+          "handler": "handler.foo",
+          "events": [
+            {
+              "http": {
+                "path": "foo",
+                "method": "post",
+                "cors": true
+              }
+            }
+          ],
+          "name": "string-concat-service-dev-foo"
+        }
+      }
+    },
+    "provider": {
+      "name": "aws",
+      "runtime": "nodejs18.x",
+      "stage": "dev",
+      "region": "us-east-1",
+      "versionFunctions": true,
+      "environment": {
+        "IS_LOCAL": "true"
+      }
+    },
+    "dashboard": {
+      "isEnabledForService": false,
+      "requiredAuthentication": false,
+      "orgFeaturesInUse": null,
+      "orgObservabilityIntegrations": null,
+      "serviceAppId": null,
+      "serviceProvider": null,
+      "instanceParameters": null
+    },
+    "serviceRawFile": "service: string-concat-service\nprovider:\n  name: aws\n  runtime: nodejs18.x\nplugins:\n  - serverless-offline\nfunctions:\n  foo:\n    handler: handler.foo\n    events:\n      - http:\n          path: foo\n          method: post\n          cors: true\n",
+    "command": [
+      "invoke",
+      "local"
+    ],
+    "options": {
+      "function": "foo",
+      "region": "us-east-1",
+      "path": "/home/bairathirahul/Workspace/vscode-aws-vault/example/serverless/event.json"
+    },
+    "orgId": "b7d3d2e1-5929-442d-b027-e6ddc4de1651",
+    "orgName": "rb905",
+    "userId": "jnZtrHzTZZ11xG9Kzv",
+    "userName": "rb905",
+    "serviceProviderAwsAccountId": "302581940266",
+    "serviceProviderAwsCfStackId": null,
+    "serviceProviderAwsCfStackCreated": null,
+    "serviceProviderAwsCfStackUpdated": null,
+    "serviceProviderAwsCfStackStatus": null,
+    "serviceProviderAwsCfStackOutputs": null
+  }
+}

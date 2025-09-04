@@ -5,34 +5,44 @@
 	"tasks": [
 		{
 			"type": "npm",
-			"script": "watch",
-			"problemMatcher": "$ts-webpack-watch",
-			"isBackground": true,
+			"script": "compile",
+			"problemMatcher": "$tsc",
 			"presentation": {
 				"reveal": "never",
-				"group": "watchers"
+				"group": "build"
 			},
 			"group": {
 				"kind": "build",
 				"isDefault": true
+			},
+			"options": {
+				"shell": {
+					"executable": "/bin/bash",
+					"args": ["-c", "source ~/.nvm/nvm.sh && nvm use current && npm run compile"]
+				}
 			}
 		},
 		{
 			"type": "npm",
-			"script": "watch-tests",
-			"problemMatcher": "$tsc-watch",
-			"isBackground": true,
+			"script": "compile-tests",
+			"problemMatcher": "$tsc",
 			"presentation": {
 				"reveal": "never",
-				"group": "watchers"
+				"group": "build"
 			},
-			"group": "build"
+			"group": "build",
+			"options": {
+				"shell": {
+					"executable": "/bin/bash",
+					"args": ["-c", "source ~/.nvm/nvm.sh && nvm use current && npm run compile-tests"]
+				}
+			}
 		},
 		{
-			"label": "tasks: watch-tests",
+			"label": "tasks: compile-tests",
 			"dependsOn": [
-				"npm: watch",
-				"npm: watch-tests"
+				"npm: compile",
+				"npm: compile-tests"
 			],
 			"problemMatcher": []
 		}

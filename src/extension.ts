@@ -8,6 +8,7 @@ const execAsync = promisify(exec);
 
 class AwsVaultDebugConfigurationProvider implements vscode.DebugConfigurationProvider {
     private awsVaultManager: AwsVaultManager;
+    private credentialsFetched: boolean = false;
 
     constructor(awsVaultManager: AwsVaultManager) {
         this.awsVaultManager = awsVaultManager;
@@ -27,6 +28,11 @@ class AwsVaultDebugConfigurationProvider implements vscode.DebugConfigurationPro
 
         const isInstalled = await this.awsVaultManager.checkAwsVaultInstalled();
         if (!isInstalled) {
+            return config;
+        }
+
+        // Skip if we've already fetched credentials for this launch session
+        if (this.credentialsFetched) {
             return config;
         }
 
@@ -56,6 +62,9 @@ class AwsVaultDebugConfigurationProvider implements vscode.DebugConfigurationPro
                     ...config.env,
                     ...awsEnvVars
                 };
+
+                // Mark that we've fetched credentials for this launch session
+                this.credentialsFetched = true;
 
                 // Show notification that debug session will use AWS Vault profile
                 vscode.window.showInformationMessage(
@@ -88,9 +97,21 @@ class AwsVaultDebugConfigurationProvider implements vscode.DebugConfigurationPro
                         ...awsEnvVars
                     };
 
-                    vscode.window.showInformationMessage(
+                    // Mark that we've fetched credentials for this launch session
+                    this.credentialsFetched = true;
+
+                    const notification = vscode.window.showInformationMessage(
                         `Debug session will run with AWS Vault profile: ${currentProfile}`
                     );
+                    
+                    // Auto-dismiss after 5 seconds
+                    setTimeout(() => {
+                        if (notification) {
+                            notification.then((value) => {
+                                // Notification will auto-dismiss
+                            });
+                        }
+                    }, 5000);
                 }
             } catch (secondError) {
                 vscode.window.showWarningMessage(
@@ -100,6 +121,11 @@ class AwsVaultDebugConfigurationProvider implements vscode.DebugConfigurationPro
         }
 
         return config;
+    }
+
+    // Reset credentials fetched flag when debug session ends
+    resetCredentialsFetched() {
+        this.credentialsFetched = false;
     }
 }
 
@@ -329,10 +355,16 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.debug.registerDebugConfigurationProvider('*', debugConfigProvider)
     ];
 
+    // Clear processed profile when debug sessions end
+    const debugSessionListener = vscode.debug.onDidTerminateDebugSession((session) => {
+        debugConfigProvider.resetCredentialsFetched();
+    });
+
     context.subscriptions.push(
         selectProfileCommand, 
         refreshProfilesCommand,
         launchTerminalCommand,
+        debugSessionListener,
         ...debugProviderDisposables,
         awsVaultManager
     );
