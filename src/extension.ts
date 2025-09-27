@@ -20,7 +20,6 @@ class AwsVaultDebugConfigurationProvider implements vscode.DebugConfigurationPro
         token?: vscode.CancellationToken
     ): Promise<vscode.DebugConfiguration | null | undefined> {
         const currentProfile = this.awsVaultManager.getCurrentProfile();
-        
         // Only modify if we have a selected profile and AWS Vault is installed
         if (!currentProfile) {
             return config;
@@ -38,12 +37,11 @@ class AwsVaultDebugConfigurationProvider implements vscode.DebugConfigurationPro
 
         try {
             // Get AWS credentials from aws-vault for the selected profile
-            // Use --no-session to avoid interactive prompts and add timeout
-            const { stdout } = await execAsync(`aws-vault exec ${currentProfile} --no-session -- env | grep AWS_`, {
-                timeout: 10000 // 10 second timeout
+            const { stdout } = await execAsync(`aws-vault exec ${currentProfile} -- env | grep AWS_`, {
+                timeout: 30000 // 30 second timeout
             });
             const awsEnvVars: { [key: string]: string } = {};
-            
+
             // Parse AWS environment variables
             stdout.split('\n').forEach(line => {
                 const trimmedLine = line.trim();
@@ -68,56 +66,14 @@ class AwsVaultDebugConfigurationProvider implements vscode.DebugConfigurationPro
 
                 // Show notification that debug session will use AWS Vault profile
                 vscode.window.showInformationMessage(
-                    `Debug session will run with AWS Vault profile: ${currentProfile}`
+                    `Starting session with profile: ${currentProfile}`
                 );
             }
-
         } catch (error) {
-            // If --no-session fails, try without it but with a shorter timeout
-            try {
-                const { stdout } = await execAsync(`aws-vault exec ${currentProfile} -- env | grep AWS_`, {
-                    timeout: 5000 // 5 second timeout
-                });
-                const awsEnvVars: { [key: string]: string } = {};
-                
-                stdout.split('\n').forEach(line => {
-                    const trimmedLine = line.trim();
-                    if (trimmedLine && trimmedLine.includes('=')) {
-                        const [key, ...valueParts] = trimmedLine.split('=');
-                        const value = valueParts.join('=');
-                        if (key.startsWith('AWS_')) {
-                            awsEnvVars[key] = value;
-                        }
-                    }
-                });
-
-                if (Object.keys(awsEnvVars).length > 0) {
-                    config.env = {
-                        ...config.env,
-                        ...awsEnvVars
-                    };
-
-                    // Mark that we've fetched credentials for this launch session
-                    this.credentialsFetched = true;
-
-                    const notification = vscode.window.showInformationMessage(
-                        `Debug session will run with AWS Vault profile: ${currentProfile}`
-                    );
-                    
-                    // Auto-dismiss after 5 seconds
-                    setTimeout(() => {
-                        if (notification) {
-                            notification.then((value) => {
-                                // Notification will auto-dismiss
-                            });
-                        }
-                    }, 5000);
-                }
-            } catch (secondError) {
-                vscode.window.showWarningMessage(
-                    `Failed to get AWS credentials for profile ${currentProfile}. This may require interactive input (MFA). Consider using the terminal integration instead.`
-                );
-            }
+            vscode.window.showWarningMessage(
+                `Failed to get AWS credentials for profile ${currentProfile}.`
+            );
+            return undefined; // Terminate the debug command fully
         }
 
         return config;

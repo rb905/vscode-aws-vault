@@ -4,6 +4,14 @@ All notable changes to the "vscode-aws-vault" extension will be documented in th
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+
+## [0.0.3] - 2025-09-26
+
+### Fixed
+- Simplified debug credential fetching logic (removed --no-session, no fallback, single attempt)
+- Improved error handling: debug session now terminates on credential fetch failure
+- Updated error messages to be more actionable and concise
+
 ## [0.0.2] - 2025-04-09
 
 ### Added
