@@ -14,12 +14,15 @@ class AwsVaultDebugConfigurationProvider implements vscode.DebugConfigurationPro
         this.awsVaultManager = awsVaultManager;
     }
 
-    async resolveDebugConfiguration(
+    async resolveDebugConfigurationWithSubstitutedVariables(
         folder: vscode.WorkspaceFolder | undefined,
         config: vscode.DebugConfiguration,
         token?: vscode.CancellationToken
     ): Promise<vscode.DebugConfiguration | null | undefined> {
+        // This method is called after variable substitution
+        // It ensures AWS credentials are available for both "Debug" and "Run Without Debugging"
         const currentProfile = this.awsVaultManager.getCurrentProfile();
+        
         // Only modify if we have a selected profile and AWS Vault is installed
         if (!currentProfile) {
             return config;
@@ -64,7 +67,7 @@ class AwsVaultDebugConfigurationProvider implements vscode.DebugConfigurationPro
                 // Mark that we've fetched credentials for this launch session
                 this.credentialsFetched = true;
 
-                // Show notification that debug session will use AWS Vault profile
+                // Show notification that session will use AWS Vault profile
                 vscode.window.showInformationMessage(
                     `Starting session with profile: ${currentProfile}`
                 );
@@ -73,7 +76,7 @@ class AwsVaultDebugConfigurationProvider implements vscode.DebugConfigurationPro
             vscode.window.showWarningMessage(
                 `Failed to get AWS credentials for profile ${currentProfile}.`
             );
-            return undefined; // Terminate the debug command fully
+            return undefined; // Terminate the command fully
         }
 
         return config;

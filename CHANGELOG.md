@@ -5,6 +5,16 @@ All notable changes to the "vscode-aws-vault" extension will be documented in th
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 
+## [0.0.4] - 2025-11-11
+
+### Added
+- Added support for "Run Without Debugging" (Ctrl+F5) in addition to regular debugging
+
+### Changed
+- Moved credential fetching to `resolveDebugConfigurationWithSubstitutedVariables` for better compatibility
+- Removed `resolveDebugConfiguration` method to simplify code
+- Updated session notification message to be more generic ("Starting session" instead of "Debug session")
+
 ## [0.0.3] - 2025-09-26
 
 ### Fixed
