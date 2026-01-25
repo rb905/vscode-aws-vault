@@ -5,6 +5,12 @@ All notable changes to the "vscode-aws-vault" extension will be documented in th
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 
+## [Unreleased]
+
+### Changed
+- Updated GitHub repository
+- Upgraded packages to remove vulnerability
+
 ## [0.0.4] - 2025-11-11
 
 ### Added

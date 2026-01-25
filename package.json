@@ -2,7 +2,7 @@
   "name": "vscode-aws-vault",
   "displayName": "VSCode AWS Vault",
   "description": "VS Code extension for AWS Vault integration",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "engines": {
     "vscode": "^1.103.0"
   },
@@ -32,7 +32,7 @@
   "icon": "icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rb905/vscode-aws-vault.git"
+    "url": "https://github.com/bairathirahul/vscode-aws-vault.git"
   },
   "publisher": "rb905",
   "scripts": {
